@@ -78,9 +78,11 @@ WSGI_APPLICATION = 'portfolio_site.wsgi.application'
 import dj_database_url
 
 # Database
-if 'DATABASE_URL' in os.environ:
+db_url = os.environ.get('DATABASE_URL') or os.environ.get('DATABASE_PRIVATE_URL') or os.environ.get('DATABASE_PUBLIC_URL')
+
+if db_url:
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': dj_database_url.parse(db_url)
     }
 else:
     DATABASES = {
@@ -89,8 +91,8 @@ else:
             'NAME': os.getenv('DB_NAME'),
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
-            'PORT': os.getenv('DB_PORT'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
 
